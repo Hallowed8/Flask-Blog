@@ -1,2 +1,4 @@
 flask_blog_venv/
 __pycache__/
+.vscode/
+site.db
