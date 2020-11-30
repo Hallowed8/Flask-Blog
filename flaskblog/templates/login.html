@@ -40,10 +40,10 @@
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class = "brn-outline-info") }}
+                <small class="text-muted ml-2">
+                    <a href="{{url_for('reset_request')}}">Forgot Passowrd?</a></a>
+                </small>
             </div>
-            <small class="text-muted ml-2">
-                <a href="#">Forgot Passowrd?</a>></a>
-            </small>
         </form>
     </div>
     <div class="border-top pt-3">

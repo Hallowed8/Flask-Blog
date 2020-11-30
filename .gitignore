@@ -2,3 +2,9 @@ flask_blog_venv/
 __pycache__/
 .vscode/
 site.db
+
+flaskblog/static/*
+!flaskblog/static/main.css
+!flaskblog/static/profile_pics
+flaskblog/static/profile_pics/*
+!flaskblog/static/profile_pics/default.jpg
