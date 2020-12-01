@@ -12,7 +12,8 @@ from flask_mail import Message
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = Post.query.all()
+    page = request.args.get('page', 1, type = int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page = 5)
     return render_template("home.html", posts = posts)
 
 
@@ -73,6 +74,8 @@ def save_picture(form_picture):
 @app.route('/account', methods = ['GET', 'POST'])
 @login_required
 def account():
+    page = request.args.get('page', 1, type = int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page = 3)
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -88,7 +91,8 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template('account.html', title = 'Account', image_file = image_file, form = form)
+    return render_template('account.html', title = 'Account', image_file = image_file,\
+         form = form, posts = posts, user = current_user)
 
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
@@ -180,3 +184,12 @@ def reset_token(token):
         db.session.commit()
         flash(f'You password has been updated! You are now able to log in', category='success')
         return redirect(url_for('login'))
+
+@app.route("/user/<string:username>")
+def user_posts(username):
+    page = request.args.get('page', 1, type = int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author = user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page = 5)
+    return render_template("user_posts.html", posts = posts, user=user)
